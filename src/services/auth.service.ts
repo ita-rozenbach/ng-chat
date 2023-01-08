@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { Router } from '@angular/router';
 import * as firebase from 'firebase/compat/app';
-import { merge } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { User } from 'src/app/Models/user.interface';
 
 @Injectable({
@@ -10,12 +11,47 @@ import { User } from 'src/app/Models/user.interface';
 })
 export class AuthService {
 
-  constructor(private afs: AngularFirestore, private afAuth: AngularFireAuth) { }
+
+  private IsLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isLoggedIn = this.IsLoggedIn$.asObservable();
+
+  private userDetails$: Subject<User|undefined> = new Subject<User|undefined>();
+  public userDetails = this.userDetails$.asObservable();
+
+  constructor(
+    private afs: AngularFirestore,
+    private afAuth: AngularFireAuth,
+    private router: Router) {
+      if(localStorage.getItem("user")){
+      }
+
+      afAuth.authState.subscribe((user) =>{
+        if(!!user){
+          this.userDetails$.next(user as User);
+          this.IsLoggedIn$.next(true);
+          localStorage.setItem('user', JSON.stringify(user));
+        }
+        else{
+          localStorage.removeItem('user');
+          this.IsLoggedIn$.next(false);
+
+        }
+      })
+  }
 
 
   public signInWithGoogle() {
     this.authLogin(new firebase.default.auth.GoogleAuthProvider());
   }
+
+  public signOut(): Promise<void> {
+    return this.afAuth.signOut().then(() => {
+      localStorage.removeItem('user')
+      this.router.navigate(['/']);
+      this.userDetails$.next(undefined);
+      
+    })
+  } 
   private authLogin(provider: firebase.default.auth.AuthProvider) {
     return this.afAuth.signInWithPopup(provider).then((res) => {
       return this.setUserDate(res.user as User);
@@ -29,7 +65,6 @@ export class AuthService {
       `users/${user.uid}`
     )
 
-    //the data for this document
     const userData: User = {
       uid: user.uid,
       email: user.email,
@@ -37,12 +72,11 @@ export class AuthService {
       photoURL: user.photoURL
     }
 
-    //insert/update the data for the document
+    //insert/update the data within a document
     return userRef.set(userData, {
       merge: true
     })
-
-
-
   }
+
+  
 }

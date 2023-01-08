@@ -9,6 +9,7 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { environment } from 'src/environments/environments';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { HeaderComponent } from './components/header/header.component';
 
 
 
@@ -16,6 +17,7 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent,
   ], 
   imports: [
     BrowserModule,

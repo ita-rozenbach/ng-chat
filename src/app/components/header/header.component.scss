@@ -1,0 +1,16 @@
+.header {
+
+    &_spacer {
+        flex: 1 1 auto;
+    }
+}
+
+.mat-toolbar.mat-primary {
+    background-color: palevioletred !important;
+}
+
+.google-button.dark {
+    background-color: palevioletred !important;
+    border: 1px solid palevioletred !important;
+    color: #fff;
+}
