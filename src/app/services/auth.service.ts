@@ -3,7 +3,7 @@ import { AngularFireAuth } from "@angular/fire/compat/auth";
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase/compat/app';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { User } from 'src/app/Models/user.interface';
 
 @Injectable({
@@ -13,35 +13,37 @@ export class AuthService {
 
 
   private IsLoggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  public isLoggedIn = this.IsLoggedIn$.asObservable();
+  // public isLoggedIn = this.IsLoggedIn$.asObservable();
 
-  private userDetails$: Subject<User|undefined> = new Subject<User|undefined>();
+  private userDetails$: Subject<User | undefined> = new Subject<User | undefined>();
   public userDetails = this.userDetails$.asObservable();
 
   constructor(
     private afs: AngularFirestore,
     private afAuth: AngularFireAuth,
     private router: Router) {
-      if(localStorage.getItem("user")){
+    if (localStorage.getItem("user")) {
+      this.IsLoggedIn$.next(true);
+    }
+
+    afAuth.authState.subscribe((user) => {
+      if (!!user) {
+        this.userDetails$.next(user as User);
+        this.IsLoggedIn$.next(true);
+        localStorage.setItem('user', JSON.stringify(user));
       }
+      else {
+        localStorage.removeItem('user');
+        this.IsLoggedIn$.next(false);
 
-      afAuth.authState.subscribe((user) =>{
-        if(!!user){
-          this.userDetails$.next(user as User);
-          this.IsLoggedIn$.next(true);
-          localStorage.setItem('user', JSON.stringify(user));
-        }
-        else{
-          localStorage.removeItem('user');
-          this.IsLoggedIn$.next(false);
-
-        }
-      })
+      }
+    })
   }
 
 
   public signInWithGoogle() {
     this.authLogin(new firebase.default.auth.GoogleAuthProvider());
+    
   }
 
   public signOut(): Promise<void> {
@@ -49,9 +51,11 @@ export class AuthService {
       localStorage.removeItem('user')
       this.router.navigate(['/']);
       this.userDetails$.next(undefined);
-      
+
     })
-  } 
+  }
+
+  
   private authLogin(provider: firebase.default.auth.AuthProvider) {
     return this.afAuth.signInWithPopup(provider).then((res) => {
       return this.setUserDate(res.user as User);
@@ -78,5 +82,8 @@ export class AuthService {
     })
   }
 
-  
+  public isLoggedIn(): Observable<boolean> {
+    return this.IsLoggedIn$.asObservable();
+  }
+
 }
