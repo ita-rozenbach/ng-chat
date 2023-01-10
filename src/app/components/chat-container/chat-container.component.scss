@@ -1,0 +1,19 @@
+button {
+    background-color: palevioletred !important;
+    color: white !important;
+}
+
+.chat-container {
+    display: flex;
+
+    &__room list {
+        width: 15rem !important;
+        margin: 2px;
+    }
+
+    &__add-room {
+        position: fixed;
+        right: 2rem;
+        bottom: 2rem;
+    }
+}

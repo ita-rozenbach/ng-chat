@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { CoolSocialLoginButtonsModule } from '@angular-cool/social-login-buttons';
+import { MatListModule } from '@angular/material/list';
 
 
 
-const moduls: any = [MatToolbarModule, MatButtonModule, CoolSocialLoginButtonsModule];
+const moduls: any = [MatToolbarModule, MatButtonModule, CoolSocialLoginButtonsModule, MatListModule];
 
 @NgModule({
   declarations: [],

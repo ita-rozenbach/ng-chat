@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { IChatRoom } from 'src/app/Models';
 
 @Component({
   selector: 'app-room-list',
@@ -6,5 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./room-list.component.scss']
 })
 export class RoomListComponent {
+@Input() rooms: Array<IChatRoom> = [];
 
 }
