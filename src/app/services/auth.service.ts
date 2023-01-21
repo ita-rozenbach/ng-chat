@@ -22,9 +22,14 @@ export class AuthService {
     private afs: AngularFirestore,
     private afAuth: AngularFireAuth,
     private router: Router) {
-    if (localStorage.getItem("user")) {
-      this.IsLoggedIn$.next(true);
-    }
+
+      const u = localStorage.getItem("user");
+      if (!!u) {
+        this.IsLoggedIn$.next(true);
+        // this.router.navigate(["/chat"]);
+      }
+    
+
 
     afAuth.authState.subscribe((user) => {
       if (!!user) {
@@ -60,6 +65,7 @@ export class AuthService {
     return this.afAuth.signInWithPopup(provider).then((res) => {
       this.IsLoggedIn$.next(true);
       this.setUserDate(res.user as User);
+      // this.router.navigate(["/chat"]);
       this.router.navigate(["chat"])
     })
   }

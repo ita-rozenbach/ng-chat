@@ -16,6 +16,7 @@ import { AddRoomComponent } from './components/add-room/add-room.component';
 import { HomeComponent } from './components/home/home.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ChatContainerComponent } from './components/chat-container/chat-container.component';
+import {RouterModule} from '@angular/router';
 
 
 
@@ -38,7 +39,8 @@ import { ChatContainerComponent } from './components/chat-container/chat-contain
     MaterialModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    RouterModule
   ],
   providers: [],
   bootstrap: [AppComponent]

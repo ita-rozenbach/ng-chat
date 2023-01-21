@@ -8,12 +8,12 @@ import { AuthService } from './auth.service';
 })
 export class AuthGuardService implements CanActivate {
 
-  constructor( private authService: AuthService, private router: Router ) { }
+  constructor(private authService: AuthService, private router: Router) { }
   canActivate() {
     return this.authService.isLoggedIn().pipe(
-      tap((isUserLoggedIn) =>{ 
-        console.log(isUserLoggedIn);
-        if(!isUserLoggedIn){
+      tap((isUserLoggedIn) => {
+        console.log("canActivate")
+        if (!isUserLoggedIn) {
           this.router.navigate(['/']);
         }
       })

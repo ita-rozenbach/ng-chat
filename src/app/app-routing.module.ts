@@ -12,7 +12,7 @@ const routes: Routes = [
     canActivate: [AuthGuardService]
   },
   {
-    path: "chat:/rommId",
+    path: "chat/:roomId",
     component: ChatContainerComponent,
     canActivate: [AuthGuardService]
   },
@@ -27,7 +27,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes), RouterModule],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
