@@ -60,6 +60,10 @@ export class AuthService {
     })
   }
 
+  //get user data that was saved in local storage
+  public getUserData():Observable<User|undefined>{
+    return this.userDetails;
+  }
   
   private authLogin(provider: firebase.default.auth.AuthProvider) {
     return this.afAuth.signInWithPopup(provider).then((res) => {

@@ -43,5 +43,12 @@ export class ChatService {
       )
   }
 
+  public addRoom(roomName: string, userId: string){
+    this.db.collection("rooms").add({
+      roomName,
+      createdUserId: userId
+    } as IChatRoom)
+  }
+
 
 }
