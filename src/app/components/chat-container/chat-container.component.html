@@ -3,7 +3,7 @@
         <app-room-list [rooms] = "rooms"></app-room-list>
     </div>
     <div class="chat-container__chat" *ngIf="masseges$ |async as masseges">
-        <app-chat [masseges]="masseges"></app-chat>
+        <app-chat [masseges]="masseges" (onSendMassege) = "onSendMassege($event)"></app-chat>
     </div>
     <div class="chat-container__add-room">
         <button type="button" mat-stroked-button (click)="openAddRoomModal()"> Add Room</button>

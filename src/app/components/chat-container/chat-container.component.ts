@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, NavigationEnd, Router, RouterEvent, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRoute, ActivationEnd, NavigationEnd, Router, RouterEvent, RouterStateSnapshot } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { IChatRoom, IMassege, User } from 'src/app/Models';
@@ -17,25 +17,24 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
   private userId: string = "";
-
+  private roomId?: string;
   public rooms$: Observable<Array<IChatRoom>>;
   public masseges$?: Observable<Array<IMassege>>;
 
 
   constructor(private chatService: ChatService, private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService,
-   public dialog: MatDialog) {
+    public dialog: MatDialog) {
     this.rooms$ = this.chatService.getRooms();
 
     // const roomId: string = this.activatedRoute.snapshot.url[0].path;
     // this.masseges$ = chatService.getRoomMasseges(roomId);
 
-    let roomId: string;
-    if(this.activatedRoute.snapshot.url.length>1){
-      roomId = this.activatedRoute.snapshot.url[1].path;
-      this.masseges$ = chatService.getRoomMasseges(roomId);
+    if (this.activatedRoute.snapshot.url.length > 1) {
+      this.roomId = this.activatedRoute.snapshot.url[1].path;
+      this.masseges$ = chatService.getRoomMasseges(this.roomId);
 
     }
-
+    //subscribe to router events
     this.subscriptions.add(
       this.router.events.pipe(
         filter((data) => data instanceof NavigationEnd)).subscribe((data) => {
@@ -48,12 +47,22 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
     )
   }
   ngOnInit(): void {
+    //subscribe to user data
     this.subscriptions.add(
       this.authService.getUserData().pipe(
         filter((data) => data != undefined)
-      ).subscribe((user) => this.userId = user?.uid?user?.uid: "")
+      ).subscribe((user) => this.userId = user?.uid ? user?.uid : "")
+    )
+
+    this.subscriptions.add(
+      this.router.events.pipe(filter((routerEvent) => routerEvent instanceof ActivationEnd))
+        .subscribe((data) => {
+          const routerEvent = data as ActivationEnd;
+          this.roomId = routerEvent.snapshot.paramMap.get("roomId") || "";
+        })
     )
   }
+
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -69,7 +78,14 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onAddRoom(roomName: string, userId: string){
+  public onAddRoom(roomName: string, userId: string) {
     this.chatService.addRoom(roomName, userId);
   }
+
+  public onSendMassege(massege: string): void {
+    if (this.userId && this.roomId) {
+      this.chatService.sendMassege(this.roomId, this.userId, massege);
+    }
+  }
+
 }

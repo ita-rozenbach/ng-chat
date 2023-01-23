@@ -1,5 +1,12 @@
-<div>
-    <p *ngFor="let massege of masseges ">
-        {{massege.body}}
-    </p>
+<div class="chat" *ngIf="masseges">
+    <div class="chat__masseges">
+        <div class="chat__massege" *ngFor="let massege of masseges " >
+            {{massege.body}}
+        </div>
+    </div>
+    <div class="chat__form">
+        <input type="text" #newMassege>
+        <button type="button" (click)="sendMassege(newMassege.value, newMassege)"
+            (keypress.enter)="sendMassege(newMassege.value, newMassege)">Send</button>
+    </div>
 </div>

@@ -9,7 +9,7 @@ import { IChatRoom, IMassege } from '../Models';
 export class ChatService {
 
   constructor(private db: AngularFirestore) {
-
+    db.firestore.settings({experimentalAutoDetectLongPolling: true});
   }
 
   public getRooms(): Observable<Array<IChatRoom>> {
@@ -43,12 +43,19 @@ export class ChatService {
       )
   }
 
-  public addRoom(roomName: string, userId: string){
+  public addRoom(roomName: string, userId: string) {
     this.db.collection("rooms").add({
       roomName,
       createdUserId: userId
     } as IChatRoom)
   }
 
+  public sendMassege(roomId: string, userId: string, body: string) {
+    this.db.collection('rooms').doc(roomId).collection('masseges').add({
+      userId,
+      body,
+      timestamp: new Date().getTime()
+    } as IMassege);
+  }
 
 }
