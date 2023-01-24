@@ -1,8 +1,8 @@
 <div class="chat" *ngIf="masseges">
     <div class="chat__masseges">
-        <div class="chat__massege" *ngFor="let massege of masseges " >
-            {{massege.body}}
-        </div>
+        <cdk-virtual-scroll-viewport itemSize="15" class="chat__scroller" #virtualScroll>
+            <div *cdkVirtualFor="let massege of masseges" class="chat__massege"> {{massege.body}}</div>
+          </cdk-virtual-scroll-viewport>
     </div>
     <div class="chat__form">
         <input type="text" #newMassege>

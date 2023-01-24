@@ -1,0 +1,18 @@
+.chat{
+    margin: 20px;
+    &__massege{
+        height: 30px;
+    }
+
+}
+
+
+.cdk-virtual-scrollable {
+    overflow: auto;
+    will-change: scroll-position;
+    contain:none;
+    -webkit-overflow-scrolling: touch;
+    height: 200px;
+    width: 212px;
+    border: 1px solid black ;
+}

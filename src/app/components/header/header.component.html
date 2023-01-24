@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar class="header" color="primary">
 
     <span>NG Chat</span>
     <span class="header_spacer"></span>
@@ -8,6 +8,7 @@
 
 
     <ng-template #loggedIn>
+        <a class="header__chat"routerLink="/chat">Chat</a>
         <button mat-stroked-button (click)="signOut()">
             Logout
         </button>
